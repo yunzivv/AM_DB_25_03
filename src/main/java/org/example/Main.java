@@ -2,6 +2,7 @@ package org.example;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -112,9 +113,10 @@ public class Main {
                         int id = article.getId();
                         String title = article.getTitle();
                         String regDate = article.getRegDate();
+                        String nowDate = LocalDate.now().toString();
 
-                        if (regDate.split(" ")[0].equals(LocalDate.now())) {
-                            regDate = regDate.split(" ")[1];
+                        if (regDate.split(" ")[0].equals(LocalDate.now().toString())) {
+                            regDate = regDate.split(" ")[1].substring(0, 8);
                         } else {
                             regDate = regDate.split(" ")[0];
                         }
