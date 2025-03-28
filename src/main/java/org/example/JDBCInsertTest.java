@@ -22,8 +22,6 @@ public class JDBCInsertTest {
         // pstmt의 결과를 받아 저장하는 클래스
         ResultSet rs = null;
 
-        Scanner sc = new Scanner(System.in);
-
         try {
             // 드라이버 연결
             Class.forName("org.mariadb.jdbc.Driver");
@@ -33,49 +31,11 @@ public class JDBCInsertTest {
             conn = DriverManager.getConnection(url, "root", "");
             System.out.println("연결 성공!");
 
-
-            System.out.println("[write]");
-
-                    System.out.print("tile : ");
-                    String title = sc.nextLine();
-
-                    System.out.print("body : ");
-                    String body = sc.nextLine();
-
-                    String sql = "INSERT INTO article SET ";
-                    sql += "rgDate = NOW()";
-                    sql += "updateDate = NOW(), ";
-                    sql += "title = " + title;
-                    sql += "`body` = " + body + ";";
-
-                    try {
-                        pstmt = conn.prepareStatement(sql);
-                        int res = pstmt.executeUpdate(sql);
-
-                        if (res > 0) {
-                            System.out.println("[write success]");
-                        }
-
-                    } catch (Exception e) {
-
-                        System.out.println(e.getMessage());
-
-                    } finally {
-
-                        try {
-                            pstmt.close();
-                            conn.close();
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-
-            sql = "INSERT INTO article ";
+            String sql = "INSERT INTO article ";
             sql += "SET reDate = NOW(), ";
             sql += "updateDate = NOW(), ";
             sql += "title = CONCAT('제목', SUBSTRING(RAND() *1000 FROM 1 FOR 2)), ";
             sql += "`body` = CONCAT('내용', SUBSTRING(RAND() *1000 FROM 1 FOR 2));";
-
 
             // sql 명령어를 전달한다.
             pstmt = conn.prepareStatement(sql);
@@ -85,74 +45,6 @@ public class JDBCInsertTest {
             int affectedrows = pstmt.executeUpdate();
             System.out.println("rows : " + affectedrows);
 
-//            while (true) {
-//                System.out.print("\ncmd : ");
-//                String cmd = sc.nextLine();
-//
-//                if (cmd.equals("exit")) {
-//                    break;
-//                }
-//
-//                if (cmd.equals("article write")) {
-//
-//                    System.out.println("[write]");
-//
-//                    System.out.print("tile : ");
-//                    String title = sc.nextLine();
-//
-//                    System.out.print("body : ");
-//                    String body = sc.nextLine();
-//
-//                    String sql = "INSERT INTO article SET ";
-//                    sql += "rgDate = NOW()";
-//                    sql += "updateDate = NOW(), ";
-//                    sql += "title = " + title;
-//                    sql += "`body` = " + body + ";";
-//
-//                    try {
-//                        pstmt = conn.prepareStatement(sql);
-//                        int res = pstmt.executeUpdate(sql);
-//
-//                        if (res > 0) {
-//                            System.out.println("[write success]");
-//                            articles.add(new Article(id, title, content));
-//                        }
-//
-//                    } catch (Exception e) {
-//
-//                        System.out.println(e.getMessage());
-//
-//                    } finally {
-//
-//                        try {
-//                            stmt.close();
-//                            conn.close();
-//                        } catch (Exception e) {
-//                            System.out.println(e.getMessage());
-//                        }
-//                    }
-//
-//                } else if (cmd.equals("article list")) {
-//
-//                    System.out.println("[list]");
-//
-//                    if (articles.isEmpty()) {
-//                        System.out.println("[list is empty]");
-//                        continue;
-//                    }
-//
-//                    System.out.println(" No |  title ");
-//                    System.out.println("-------------");
-//
-//                    for (int i = articles.size() - 1; i >= 0; i--) {
-//                        Article article = articles.get(i);
-//                        System.out.printf(" %d  |  %s \n", article.getId(), article.getTitle());
-//                    }
-//
-//                }
-//            }
-//            System.out.println("[Program finished]");
-//            sc.close();
 
         } catch (ClassNotFoundException e) {
             System.out.println("드라이버 로딩 실패" + e);

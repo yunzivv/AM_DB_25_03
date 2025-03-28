@@ -13,18 +13,8 @@ public class Main {
         List<Article> articles = new ArrayList<>();
         int lastArticleId = 0;
 
-        // 클래스가 달라지면 다시 연결이 필요함
-//        JDBCConnTest.main(String[] args);
-
-        // 데이터베이스에 sql문을 전달, 결과값을 반환한다.
-        // con과 세트
-        PreparedStatement pstmt = null;
-
-        // pstmt의 결과를 받아 저장하는 클래스
-        ResultSet rs = null;
-
         while (true) {
-            System.out.print("\ncmd :");
+            System.out.print("\ncmd : ");
             String cmd = sc.nextLine();
 
             if(cmd.equals("exit")){
@@ -36,17 +26,63 @@ public class Main {
                 System.out.println("[write]");
                 int id = ++lastArticleId;
 
-                System.out.print("tile : ");
+                System.out.print("title : ");
                 String title = sc.nextLine();
 
                 System.out.print("body : ");
-                String content = sc.nextLine();
+                String body = sc.nextLine();
 
 //                리스트에 article을 저장하지 않고 DB에 저장한다.
 //                articles.add(new Article(id, title, content));
 
+//                String sql = "INSERT INTO article SET ";
+//                sql += "reDate = NOW()";
+//                sql += "updateDate = NOW(), ";
+//                sql += "title = '" + title + "', ";
+//                sql += "`body` = '" + body + "';";
 
                 System.out.printf("[%d article wrote]\n", lastArticleId);
+
+                Connection conn = null;
+                PreparedStatement pstmt = null;
+
+                try {
+                    // 드라이버 연결
+                    Class.forName("org.mariadb.jdbc.Driver");
+                    // 계정 연결
+                    String url = "jdbc:mariadb://127.0.0.1:3306/AM_DB_25_03?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul";
+
+                    conn = DriverManager.getConnection(url, "root", "");
+                    System.out.println("연결 성공!");
+
+                    String sql = "INSERT INTO article ";
+                    sql += "SET regDate = NOW(), ";
+                    sql += "updateDate = NOW(), ";
+                    sql += "title = '" + title + "', ";
+                    sql += "`body` = '" + body + "';";
+
+                    // sql 명령어를 전달한다.
+                    pstmt = conn.prepareStatement(sql);
+                    System.out.println(sql);
+
+                    // 몇개의 행에 적용 되었는 지 반환
+                    int affectedrows = pstmt.executeUpdate();
+                    System.out.println("sql affecte rows : " + affectedrows);
+
+
+                } catch (ClassNotFoundException e) {
+                    System.out.println("드라이버 로딩 실패" + e);
+                } catch (SQLException e) {
+                    System.out.println("에러 : " + e);
+                } finally {
+                    try {
+                        if (conn != null && !conn.isClosed()) {
+                            conn.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
 
             } else if(cmd.equals("article list")) {
 
@@ -59,6 +95,7 @@ public class Main {
 
                 System.out.println(" No |  title ");
                 System.out.println("-------------");
+
 
                 for(int i = articles.size() - 1; i >= 0; i--){
                     Article article = articles.get(i);
