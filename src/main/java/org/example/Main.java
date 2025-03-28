@@ -10,9 +10,6 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        List<Article> articles = new ArrayList<>();
-        int lastArticleId = 0;
-
         while (true) {
             System.out.print("\ncmd : ");
             String cmd = sc.nextLine();
@@ -31,7 +28,6 @@ public class Main {
                 System.out.print("body : ");
                 String body = sc.nextLine();
 
-                System.out.printf("[%d article wrote]\n", lastArticleId);
 
                 Connection conn = null;
                 PreparedStatement pstmt = null;
@@ -60,6 +56,9 @@ public class Main {
                     System.out.println("sql affecte rows : " + affectedrows);
 
 
+                    System.out.println("[article wrote]\n");
+
+
                 } catch (ClassNotFoundException e) {
                     System.out.println("드라이버 로딩 실패" + e);
                 } catch (SQLException e) {
@@ -76,21 +75,68 @@ public class Main {
 
             } else if(cmd.equals("article list")) {
 
-                System.out.println("[list]");
+                Connection conn = null;
+                PreparedStatement pstmt = null;
 
-                if(articles.isEmpty()){
-                    System.out.println("[list empty]");
-                    continue;
+                try {
+                    // 드라이버 연결
+                    Class.forName("org.mariadb.jdbc.Driver");
+                    // 계정 연결
+                    String url = "jdbc:mariadb://127.0.0.1:3306/AM_DB_25_03?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul";
+
+                    conn = DriverManager.getConnection(url, "root", "");
+                    System.out.println("연결 성공!");
+
+                    String sql = "SELECT id, title, regDate FROM article ORDER BY id DESC;";
+
+                    pstmt = conn.prepareStatement(sql);
+                    System.out.println(sql);
+
+                    ResultSet rs = pstmt.executeQuery();
+
+                    System.out.println("[list]");
+
+                    List<Article> articles = new ArrayList<>();
+
+                    while (rs.next()) {
+
+                        int id = rs.getInt("id");
+                        String title = rs.getString("title");
+                        String regDate = rs.getString("regDate");
+
+                        Article article = new Article(id, title, regDate);
+
+                        articles.add(article);
+                    }
+
+                    // article 객체를 저장한 articles 출력
+                    System.out.println(" No |  title  |  regDate  ");
+                    System.out.println("--------------------");
+                    for(Article article : articles) {
+                        System.out.println(article.getId() + " | " + article.getTitle() + " | " + article.getRegDate());
+                    }
+
+
+                    // 몇개의 행에 적용 되었는 지 반환
+                    // select 실행은 적용 행이 없음
+                    int affectedrows = pstmt.executeUpdate();
+                    System.out.println("rows : " + affectedrows);
+
+                } catch (ClassNotFoundException e) {
+                    System.out.println("드라이버 로딩 실패" + e);
+                } catch (SQLException e) {
+                    System.out.println("에러 : " + e);
+                } finally {
+                    try {
+                        if (conn != null && !conn.isClosed()) {
+                            conn.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                System.out.println(" No |  title ");
-                System.out.println("-------------");
-
-
-                for(int i = articles.size() - 1; i >= 0; i--){
-                    Article article = articles.get(i);
-                    System.out.printf(" %d  |  %s \n", article.getId(), article.getTitle());
-                }
+            } else if (cmd.equals("article modify")) {
 
             }
         }
