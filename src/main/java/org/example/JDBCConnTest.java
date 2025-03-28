@@ -1,4 +1,5 @@
 package org.example;
+
 import java.sql.*;
 
 public class JDBCConnTest {
@@ -31,5 +32,8 @@ public class JDBCConnTest {
         }
     }
 
+    public static Connection getConnection() {
 
+        return null;
+    }
 }

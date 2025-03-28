@@ -24,22 +24,12 @@ public class Main {
             if(cmd.equals("article write")) {
 
                 System.out.println("[write]");
-                int id = ++lastArticleId;
 
                 System.out.print("title : ");
                 String title = sc.nextLine();
 
                 System.out.print("body : ");
                 String body = sc.nextLine();
-
-//                리스트에 article을 저장하지 않고 DB에 저장한다.
-//                articles.add(new Article(id, title, content));
-
-//                String sql = "INSERT INTO article SET ";
-//                sql += "reDate = NOW()";
-//                sql += "updateDate = NOW(), ";
-//                sql += "title = '" + title + "', ";
-//                sql += "`body` = '" + body + "';";
 
                 System.out.printf("[%d article wrote]\n", lastArticleId);
 
