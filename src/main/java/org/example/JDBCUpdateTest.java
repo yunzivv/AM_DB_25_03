@@ -33,7 +33,8 @@ public class JDBCUpdateTest {
             String body = sc.nextLine();
 
             String sql = "update article";
-            sql += " set title = '" + title + "',";
+            sql += " set updateDate = now(),";
+            sql += " title = '" + title + "',";
             sql += " `body` = '" + body + "'";
             sql += " where id = " + modifyNum;
 
