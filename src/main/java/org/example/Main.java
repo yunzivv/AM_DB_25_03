@@ -1,5 +1,6 @@
 package org.example;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -7,12 +8,20 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-
-        System.out.println("[Program Started]");
-
         Scanner sc = new Scanner(System.in);
-        int lastArticleId = 0;
+
         List<Article> articles = new ArrayList<>();
+        int lastArticleId = 0;
+
+        // 클래스가 달라지면 다시 연결이 필요함
+//        JDBCConnTest.main(String[] args);
+
+        // 데이터베이스에 sql문을 전달, 결과값을 반환한다.
+        // con과 세트
+        PreparedStatement pstmt = null;
+
+        // pstmt의 결과를 받아 저장하는 클래스
+        ResultSet rs = null;
 
         while (true) {
             System.out.print("\ncmd :");
@@ -33,8 +42,11 @@ public class Main {
                 System.out.print("body : ");
                 String content = sc.nextLine();
 
-                articles.add(new Article(id, title, content));
-                System.out.println("[write success]");
+//                리스트에 article을 저장하지 않고 DB에 저장한다.
+//                articles.add(new Article(id, title, content));
+
+
+                System.out.printf("[%d article wrote]\n", lastArticleId);
 
             } else if(cmd.equals("article list")) {
 
@@ -55,8 +67,5 @@ public class Main {
 
             }
         }
-
-        System.out.println("[Program finished]");
-        sc.close();
     }
 }
