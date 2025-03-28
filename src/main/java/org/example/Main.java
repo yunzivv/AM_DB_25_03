@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
+
         System.out.println("[Program Started]");
 
         Scanner sc = new Scanner(System.in);
