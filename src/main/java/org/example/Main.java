@@ -166,15 +166,19 @@ public class Main {
                     sc.nextLine();
 
                     System.out.print("new Title : ");
-                    String title = sc.nextLine();
+                    String title = sc.nextLine().trim();
 
                     System.out.print("new Body : ");
-                    String body = sc.nextLine();
+                    String body = sc.nextLine().trim();
 
                     String sql = "update article";
-                    sql += " set updateDate = now(),";
-                    sql += " title = '" + title + "',";
-                    sql += " `body` = '" + body + "'";
+                    sql += " set updateDate = now()";
+                    if (title.length() > 0) {
+                        sql += ", title = '" + title + "'";
+                    }
+                    if (body.length() > 0) {
+                        sql += ", `body` = '" + body + "'";
+                    }
                     sql += " where id = " + modifyNum;
 
                     // sql 명령어를 전달한다.
