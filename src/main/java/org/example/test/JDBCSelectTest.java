@@ -1,17 +1,16 @@
-package org.example;
+package org.example.test;
+
+import org.example.Article;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class JDBCUpdateTest {
+public class JDBCSelectTest {
     public static void main(String[] args) {
 
         Connection conn = null;
         PreparedStatement pstmt = null;
-
-        Scanner sc = new Scanner(System.in);
 
         try {
             // 드라이버 연결
@@ -22,21 +21,7 @@ public class JDBCUpdateTest {
             conn = DriverManager.getConnection(url, "root", "");
             System.out.println("연결 성공!");
 
-            System.out.print("수정할 게시물 번호 : ");
-            int modifyNum = sc.nextInt();
-            sc.nextLine();
-
-            System.out.print("\nnew Title : ");
-            String title = sc.nextLine();
-
-            System.out.print("\nnew Body : ");
-            String body = sc.nextLine();
-
-            String sql = "update article";
-            sql += " set updateDate = now(),";
-            sql += " title = '" + title + "',";
-            sql += " `body` = '" + body + "'";
-            sql += " where id = " + modifyNum;
+            String sql = "SELECT id, title, `body` FROM article ORDER BY id DESC;";
 
             // sql 명령어를 전달한다.
             pstmt = conn.prepareStatement(sql);
@@ -49,8 +34,31 @@ public class JDBCUpdateTest {
             // 자바가 읽을 수 있는 자료로 바꿔준다.
             List<Article> articles = new ArrayList<>();
 
+            // rs.next() : 테이블의 튜플을 순회하며 다음 튜플이 있는 지 결과를 반환
+            // article 필드는 rs의 결과값을 rs.getType()으로 가져온다.
+            while (rs.next()) {
+
+                int id = rs.getInt("id");
+                String regDate = rs.getString("reg_date");
+                String content = rs.getString("content");
+                String title = rs.getString("title");
+                String body = rs.getString("body");
+
+                Article article = new Article(id, regDate, content, title, body);
+
+                articles.add(article);
+            }
+
+            // article 객체를 저장한 articles 출력
+            System.out.println(" No |  title | body ");
+            System.out.println("--------------------");
+            for(Article article : articles) {
+                System.out.println(article.getId() + " | " + article.getTitle() + " | " + article.getBody());
+            }
+
 
             // 몇개의 행에 적용 되었는 지 반환
+            // select 실행은 적용 행이 없음
             int affectedrows = pstmt.executeUpdate();
             System.out.println("rows : " + affectedrows);
 

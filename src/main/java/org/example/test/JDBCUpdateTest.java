@@ -1,26 +1,19 @@
-package org.example;
+package org.example.test;
+
+import org.example.Article;
 
 import java.sql.*;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class JDBCInsertTest {
-
+public class JDBCUpdateTest {
     public static void main(String[] args) {
 
-        // 클래스가 달라지면 다시 연결이 필요함
         Connection conn = null;
-
-        // 데이터베이스에 sql문을 전달, 결과값을 반환한다.
-        // con과 세트
         PreparedStatement pstmt = null;
 
-        // pstmt의 결과를 받아 저장하는 클래스
-        ResultSet rs = null;
+        Scanner sc = new Scanner(System.in);
 
         try {
             // 드라이버 연결
@@ -31,20 +24,37 @@ public class JDBCInsertTest {
             conn = DriverManager.getConnection(url, "root", "");
             System.out.println("연결 성공!");
 
-            String sql = "INSERT INTO article ";
-            sql += "SET reDate = NOW(), ";
-            sql += "updateDate = NOW(), ";
-            sql += "title = CONCAT('제목', SUBSTRING(RAND() *1000 FROM 1 FOR 2)), ";
-            sql += "`body` = CONCAT('내용', SUBSTRING(RAND() *1000 FROM 1 FOR 2));";
+            System.out.print("수정할 게시물 번호 : ");
+            int modifyNum = sc.nextInt();
+            sc.nextLine();
+
+            System.out.print("\nnew Title : ");
+            String title = sc.nextLine();
+
+            System.out.print("\nnew Body : ");
+            String body = sc.nextLine();
+
+            String sql = "update article";
+            sql += " set updateDate = now(),";
+            sql += " title = '" + title + "',";
+            sql += " `body` = '" + body + "'";
+            sql += " where id = " + modifyNum;
 
             // sql 명령어를 전달한다.
             pstmt = conn.prepareStatement(sql);
             System.out.println(sql);
 
+            // sql 명령어 전달 결과를 저장
+            ResultSet rs = pstmt.executeQuery();
+
+            // rs에 결과를 저장해도 자바에서는 결과값을 해석할 수 없다.
+            // 자바가 읽을 수 있는 자료로 바꿔준다.
+            List<Article> articles = new ArrayList<>();
+
+
             // 몇개의 행에 적용 되었는 지 반환
             int affectedrows = pstmt.executeUpdate();
             System.out.println("rows : " + affectedrows);
-
 
         } catch (ClassNotFoundException e) {
             System.out.println("드라이버 로딩 실패" + e);
