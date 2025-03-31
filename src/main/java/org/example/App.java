@@ -187,31 +187,60 @@ public class App {
         } else if (cmd.startsWith("article delete")) {
 
             // 수정
-            int deleteId = -1;
+            int deleteId = 0;
 
-            try {
+            try{
                 deleteId = Integer.parseInt(cmd.split(" ")[2]);
             } catch (Exception e) {
-                System.out.println("Enter aritlce Number");
-                return 0;
+                System.out.println("Enter aritlce Number to decimal");
             }
 
-            String sql = "select count(*) from article where id = " + deleteId + ";";
+            SecSql sql = new SecSql();
+            sql.append("select count(*)");
+            sql.append("from article");
+            sql.append("where id = ?;", deleteId);
 
-            int deleteIdCount = -1;
+            Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
 
-
-            if (deleteIdCount == 0) {
+            if (articleMap.isEmpty()) {
                 System.out.printf("article %d is not exist\n", deleteId);
                 return 0;
             }
 
-            sql = "delete FROM article";
-            sql += " WHERE id = " + deleteId + ";";
+            sql = new SecSql();
+            sql.append("delete FROM article");
+            sql.append("WHERE id = ?;", deleteId);
+
+            DBUtil.update(conn, sql);
 
             System.out.printf("[article %d deleted]\n", deleteId);
 
-            return 0;
+
+        } else if (cmd.startsWith("article detail")) {
+
+            int detailId = 0;
+            try {
+                detailId = Integer.parseInt(cmd.split(" ")[2]);
+            } catch (Exception e) {
+                System.out.println("Enter aritlce Number to decimal");
+            }
+
+            SecSql sql = new SecSql();
+            sql.append("select * from article");
+            sql.append("where id = ?;", detailId);
+
+            Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+            if (articleMap.isEmpty()) {
+                System.out.printf("article %d is not exist\n", detailId);
+                return 0;
+            }
+
+            Article article = new Article(articleMap);
+            System.out.println("[detail]");
+            System.out.println("작성일자 : " + article.getRegDate());
+            System.out.println("수정일자 : " + article.getUpdateDate());
+            System.out.println("제목 : " + article.getTitle());
+            System.out.println("내용 : " + article.getBody());
         }
         return 0;
     }

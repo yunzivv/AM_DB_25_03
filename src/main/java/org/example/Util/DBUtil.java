@@ -23,6 +23,8 @@ public class DBUtil {
 
         List<Map<String, Object>> rows = new ArrayList<>();
 
+        // statement 상위 버전
+        //
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
