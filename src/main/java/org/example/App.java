@@ -29,8 +29,6 @@ public class App {
 
             try {
                 Class.forName("org.mariadb.jdbc.Driver");
-                System.out.println("연결 성공!");
-
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -47,7 +45,7 @@ public class App {
                     break;
                 }
 
-            }catch (SQLException e) {
+            } catch (SQLException e) {
                 System.out.println("에러 1 : " + e);
             } finally {
                 try {
@@ -66,7 +64,7 @@ public class App {
     // 동작 메서드
     private int doAction(Connection conn, Scanner sc, String cmd) {
 
-        if(cmd.equals("exit")) {
+        if (cmd.equals("exit")) {
             return -1;
         }
 
@@ -84,11 +82,11 @@ public class App {
             // 오버라이딩 또는
             SecSql sql = new SecSql();
             sql.append("INSERT INTO article");
-            sql.append("sql += SET regDate = NOW(),");
+            sql.append("SET regDate = NOW(),");
             sql.append("updateDate = NOW(),");
             // 물음표로 작성하면 알아서 치환이 된다.
-            sql.append("title = ?," + title);
-            sql.append("`body` = ?;" + body);
+            sql.append("title = ?,", title);
+            sql.append("`body` = ?;", body);
 
             int id = DBUtil.insert(conn, sql);
 
@@ -113,7 +111,7 @@ public class App {
                 articles.add(new Article(articleMap));
             }
 
-            if(articles.size() == 0) {
+            if (articles.size() == 0) {
                 System.out.println("[No article]");
                 return 0;
             }
@@ -149,18 +147,20 @@ public class App {
                 return 0;
             }
 
-            // 수정할 article이 존재하는 지 여부 확인
-            int modifyIdCount = -1;
-
+            // 수정할 article의 존재 여부 확인
             SecSql sql = new SecSql();
-            sql.append("SELECT COUNT(*) FROM article WHERE id = " + modifyId);
+            sql.append("SELECT *");
+            sql.append("FROM article");
+            sql.append("WHERE id = ?;", modifyId);
 
+            Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
 
-            if (modifyIdCount == 0) {
+            if (articleMap.isEmpty()) {
                 System.out.printf("article %d is not exist\n", modifyId);
                 return 0;
             }
 
+            System.out.println("[modify]");
             System.out.print("new Title : ");
             String title = sc.nextLine().trim();
 
@@ -169,28 +169,19 @@ public class App {
 
             PreparedStatement pstmt = null;
 
-            try {
-                sql.append("UPDATE article");
-                if (title.length() > 0) {
-                    sql.append("SET title = ?," + title);
-                }
-                if (body.length() > 0) {
-                    sql.append("`body` = ?;" + body);
-                }
-                pstmt = conn.prepareStatement(sql);
-                pstmt.executeUpdate();
-
-            }catch (SQLException e) {
-                System.out.println("에러 4" + e);
-            } finally {
-                try {
-                    if(pstmt != null && !pstmt.isClosed()) {
-                        pstmt.close();
-                    }
-                }catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            sql = new SecSql();
+            sql.append("UPDATE article");
+            sql.append("SET updateDate = NOW()");
+            if (title.length() > 0) {
+                sql.append(", title = ?", title);
             }
+            if (body.length() > 0) {
+                sql.append(", `body` = ?", body);
+            }
+            sql.append("WHERE id = ?;", modifyId);
+
+            DBUtil.update(conn, sql);
+
             System.out.printf("article %d is modified", modifyId);
 
         } else if (cmd.startsWith("article delete")) {
@@ -222,6 +213,6 @@ public class App {
 
             return 0;
         }
-
+        return 0;
     }
 }

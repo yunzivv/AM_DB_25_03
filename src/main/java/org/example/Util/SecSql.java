@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SecSql {
 
-    // 변경이 가능한 문자열
+    // 변경이 가능한 문자열 쿼리문을 저장한다.
     private StringBuilder sqlBuilder;
     private List<Object> datas;
 
