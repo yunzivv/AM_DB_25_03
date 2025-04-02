@@ -9,22 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public class DBUtil {
-
     public static Map<String, Object> selectRow(Connection dbConn, SecSql sql) {
         List<Map<String, Object>> rows = selectRows(dbConn, sql);
 
         if (rows.size() == 0) {
             return new HashMap<>();
         }
+
         return rows.get(0);
     }
 
     public static List<Map<String, Object>> selectRows(Connection dbConn, SecSql sql) throws SQLErrorException {
-
         List<Map<String, Object>> rows = new ArrayList<>();
 
-        // statement 상위 버전
-        //
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
@@ -122,6 +119,7 @@ public class DBUtil {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
+
         } catch (SQLException e) {
             throw new SQLErrorException("SQL 예외, SQL : " + sql, e);
         } finally {
@@ -147,8 +145,8 @@ public class DBUtil {
     }
 
     public static int update(Connection dbConn, SecSql sql) {
-
         int affectedRows = 0;
+
         PreparedStatement stmt = null;
 
         try {
@@ -172,5 +170,4 @@ public class DBUtil {
     public static int delete(Connection dbConn, SecSql sql) {
         return update(dbConn, sql);
     }
-
 }
