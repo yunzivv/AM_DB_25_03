@@ -1,7 +1,5 @@
 package org.example.controller;
 
-import org.example.Util.DBUtil;
-import org.example.Util.SecSql;
 import org.example.service.MemberService;
 
 import java.sql.Connection;
@@ -26,7 +24,7 @@ public class MemberController {
         String loginPw;
         String name;
 
-        while(true) {
+        while (true) {
             System.out.print("Id : ");
             loginId = sc.nextLine().trim();
 
@@ -36,14 +34,8 @@ public class MemberController {
                 continue;
             }
 
-            // 입력받은 loginId 존재 여부 확인
-            SecSql sql = new SecSql();
-            sql.append("select count(*) > 0");
-            sql.append("from `member`");
-            sql.append("where loginId = ?;", loginId);
-
-            boolean isLoginId = DBUtil.selectRowBooleanValue(conn, sql);
-            // 여기까지 service 할 일
+            // memberService에서 loginId 존재 여부 확인
+            boolean isLoginId = memberService.loginIdIsExist(conn, loginId);
 
             if (isLoginId) {
                 System.out.printf("%s는 이미 사용중인 ID입니다.\n", loginId);
@@ -63,7 +55,7 @@ public class MemberController {
                 System.out.println("올바르지 않은 형식의 Password입니다.");
                 continue;
             }
-            if(!loginPw.equals(loginPwCheck)) {
+            if (!loginPw.equals(loginPwCheck)) {
                 System.out.println("비밀번호가 일치하지 않습니다.");
                 continue;
             }
@@ -80,16 +72,14 @@ public class MemberController {
             break;
         }
 
-        SecSql sql = new SecSql();
-        sql.append("insert into `member`");
-        sql.append("set regDate = NOW(),");
-        sql.append("updateDate = NOW(),");
-        sql.append("loginId = ?,", loginId);
-        sql.append("loginPw = ?,", loginPw);
-        sql.append("`name` = ?;", name);
-
-        // 여기서 계속 오류 난다.
-        int id = DBUtil.insert(conn, sql);
+        int id = memberService.doJoin(conn, loginId, loginPw, name);
         System.out.printf("%s님 회원가입을 축하합니다.", name);
+    }
+
+    public void login() {
+    }
+
+    public void logout() {
+
     }
 }

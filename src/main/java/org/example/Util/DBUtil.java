@@ -95,6 +95,7 @@ public class DBUtil {
         return "";
     }
 
+    //
     public static boolean selectRowBooleanValue(Connection dbConn, SecSql sql) {
         Map<String, Object> row = selectRow(dbConn, sql);
 
@@ -105,6 +106,7 @@ public class DBUtil {
         return false;
     }
 
+    // insert
     public static int insert(Connection dbConn, SecSql sql) {
         int id = -1;
 
