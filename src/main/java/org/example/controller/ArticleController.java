@@ -1,8 +1,12 @@
 package org.example.controller;
 
 import org.example.container.Container;
+import org.example.dto.Article;
 import org.example.service.ArticleService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 public class ArticleController {
@@ -77,16 +81,36 @@ public class ArticleController {
 
     public void showList() {
 
+        List<Article> articles = articleService.getArticles();
+
         // article 존재 여부 확인
-        if (!articleService.articleIsExist()) {
+        if (articles.isEmpty()) {
             System.out.println("article is not exist");
             return;
         }
 
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         System.out.println(" No |  title  |  regDate  ");
         System.out.println("--------------------------");
 
-        articleService.showList();
+        for (Article article : articles) {
+
+            String articleDate = article.getRegDate().split(" ")[0];
+            String title = article.getTitle();
+
+            if (article.getTitle().length() > 7) {
+                title = article.getTitle().substring(0, 5) + "..";
+            }
+
+            if (articleDate.equals(today)) {
+                System.out.printf(" %d  | %-7s |  %s\n", article.getId(), title,
+                        article.getRegDate().split(" ")[1]);
+            } else {
+                System.out.printf(" %d  | %-7s |  %s\n", article.getId(), title,
+                        article.getRegDate().split(" ")[0].substring(2));
+            }
+        }
     }
 
     public void showDetail(String cmd) {
@@ -106,6 +130,12 @@ public class ArticleController {
             return;
         }
 
-        articleService.showDetail(detailId);
+        Article article = articleService.getArticle(detailId);
+
+        System.out.println("No. : " + article.getId());
+        System.out.println("작성일자 : " + article.getRegDate());
+        System.out.println("수정일자 : " + article.getUpdateDate());
+        System.out.println("제목 : " + article.getTitle());
+        System.out.println("내용 : " + article.getBody());
     }
 }
