@@ -88,6 +88,13 @@ public class MemberController {
     }
 
     public void login() {
+
+        if(Container.session.loginedMember == null) {
+            System.out.println("로그인 상태입니다..");
+            return;
+        }
+
+        System.out.println("[member Login]");
         int count = 1;
         for (int i = 0; i < 3; i++) {
             System.out.print("login ID : ");
@@ -103,12 +110,33 @@ public class MemberController {
                 ++count;
                 continue;
             }
-            System.out.print(name + "님 로그인 성공");
+
+            Container.session.loginedMember = loginedMember;
+            Container.session.loginedMemberId = loginedMember.getId();
+            System.out.print(name + "님 로그인 성공\n");
+
             return;
         }
     }
 
     public void logout() {
-        int i = memberService.logout();
+        if(Container.session.loginedMember != null) {
+            System.out.println("로그아웃 상태입니다.");
+            return;
+        }
+
+        Container.session.loginedMember = null;
+        Container.session.loginedMemberId = -1;
+
+        System.out.println("로그아웃 되었습니다.");
+    }
+
+    public void showProfile() {
+        if (Container.session.loginedMember != null) {
+            System.out.println("로그인되지 않았습니다.");
+            return;
+        } else {
+            System.out.println(Container.session.loginedMember);
+        }
     }
 }
