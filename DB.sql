@@ -74,6 +74,8 @@ SET regDate = NOW(),
 #     loginPw = CONCAT('비번', SUBSTRING(RAND() *10 FROM 1 FOR 1)),
 #     `name` = CONCAT('이름', SUBSTRING(RAND() *10 FROM 1 FOR 1));
 
+SELECT * FROM article;
 SELECT * FROM `member`;
+
 
 ################################################ 세팅

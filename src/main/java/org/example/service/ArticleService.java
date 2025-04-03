@@ -57,10 +57,10 @@ public class ArticleService {
         SecSql sql = new SecSql();
         sql.append("UPDATE article");
         sql.append("SET updateDate = NOW()");
-        if (title.length() > 0) {
+        if (!title.isEmpty()) {
             sql.append(", title = ?", title);
         }
-        if (body.length() > 0) {
+        if (!body.isEmpty()) {
             sql.append(", `body` = ?", body);
         }
         sql.append("WHERE id = ?;", modifyId);
@@ -105,7 +105,7 @@ public class ArticleService {
             } else {
                 regDate = regDate.split(" ")[0];
             }
-            System.out.println(" " + id + " | " + title + " | " + regDate);
+            System.out.println(" " + id + "  |  " + title + " |  " + regDate);
         }
     }
 

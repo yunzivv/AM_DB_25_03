@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.service.MemberService;
 
+import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.util.Scanner;
 
@@ -10,11 +11,16 @@ public class MemberController {
     private Scanner sc;
     private Connection conn;
     private MemberService memberService;
+    private Member loginedMember = null;
 
     public MemberController(Scanner sc, Connection conn) {
         this.sc = sc;
         this.conn = conn;
         this.memberService = new MemberService();
+    }
+
+    boolean isLogined() {
+        return loginedMember != null;
     }
 
     public void join() {
@@ -77,9 +83,27 @@ public class MemberController {
     }
 
     public void login() {
+        int count = 1;
+        for (int i = 0; i < 3; i++) {
+            System.out.print("login ID : ");
+            String loginId = sc.nextLine().trim();
+            System.out.print("password : ");
+            String loginPw = sc.nextLine().trim();
+
+            String name= memberService.login(conn, loginId, loginPw);
+
+            if (name == null || name.isEmpty()) {
+                System.out.printf("로그인 실패(%d/3)\n", count);
+                ++count;
+                continue;
+            }
+            System.out.print(name + "님 로그인 성공");
+
+            return;
+        }
     }
 
     public void logout() {
-
+        int i = memberService.logout(conn);
     }
 }
