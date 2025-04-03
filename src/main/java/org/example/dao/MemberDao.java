@@ -2,22 +2,31 @@ package org.example.dao;
 
 import org.example.Util.DBUtil;
 import org.example.Util.SecSql;
+import org.example.container.Container;
+import org.example.dto.Member;
 
-import java.sql.Connection;
+import java.util.Map;
 
 public class MemberDao {
 
-    public boolean loginIdIsExist(Connection conn, String loginId) {
+    // id를 전달받아 해당 멤버 반환
+    public Member getMemberByLonginId(String longinId) {
+
+        Member member = null;
+        return member;
+    }
+
+    public boolean loginIdIsExist(String loginId) {
 
         SecSql sql = new SecSql();
         sql.append("SELECT COUNT(*) > 0");
         sql.append("FROM `member`");
         sql.append("WHERE loginId = ?;", loginId);
 
-        return DBUtil.selectRowBooleanValue(conn, sql);
+        return DBUtil.selectRowBooleanValue(Container.conn, sql);
     }
 
-    public int doJoin(Connection conn, String loginId, String loginPw, String name) {
+    public int doJoin(String loginId, String loginPw, String name) {
 
         SecSql sql = new SecSql();
         sql.append("INSERT INTO`member`");
@@ -29,33 +38,24 @@ public class MemberDao {
 
         // DBUtil.insert(conn, sql)에서 계속 오류 난다.
         // 쿼리문 예약어 대문자로 수정해서 해결
-        return DBUtil.insert(conn, sql);
+        return DBUtil.insert(Container.conn, sql);
     }
 
-    public String login(Connection conn, String loginId, String loginPw) {
+    public Member login(String loginId, String loginPw) {
 
         SecSql sql = new SecSql();
-        sql.append("SELECT COUNT(*) > 0");
+        sql.append("SELECT *");
         sql.append("FROM `member`");
         sql.append("WHERE loginId = ?", loginId);
         sql.append("AND loginPw = ?;", loginPw);
 
-        if(DBUtil.selectRowBooleanValue(conn, sql)) {
+        Map<String, Object> memberMap = DBUtil.selectRow(Container.conn, sql);
+        Member member = new Member(memberMap);
 
-            sql = new SecSql();
-            sql.append("SELECT `name`");
-            sql.append("FROM `member`");
-            sql.append("WHERE loginId = ?;", loginId);
-
-            String name = DBUtil.selectRowStringValue(conn, sql);
-
-            // member 객체를 만들어서 돌려주고 싶다.
-            return name;
-        }
-        return null;
+        return member;
     }
 
-    public int logout(Connection conn) {
+    public int logout() {
         return 0;
     }
 }

@@ -1,10 +1,11 @@
 package org.example.service;
 
-import org.example.Article;
 import org.example.Util.DBUtil;
 import org.example.Util.SecSql;
+import org.example.container.Container;
+import org.example.dao.ArticleDao;
+import org.example.dto.Article;
 
-import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,32 +14,34 @@ import java.util.Map;
 public class ArticleService {
 
     List<Article> articles;
+    ArticleDao articleDao;
 
     public ArticleService() {
         articles = new ArrayList<Article>();
+        articleDao = Container.articleDao;
     }
 
     // article 존재 여부 확인
-    public boolean articleIsExist(Connection conn) {
+    public boolean articleIsExist() {
 
         SecSql sql = new SecSql();
         sql.append("SELECT COUNT(*) > 0");
         sql.append("FROM article;");
 
-        return DBUtil.selectRowBooleanValue(conn, sql);
+        return DBUtil.selectRowBooleanValue(Container.conn, sql);
     }
 
-    public boolean idIsExist(Connection conn, int id) {
+    public boolean idIsExist(int id) {
 
         SecSql sql = new SecSql();
         sql.append("SELECT COUNT(*) > 0");
         sql.append("FROM article");
         sql.append("WHERE id = ?;", id);
 
-        return DBUtil.selectRowBooleanValue(conn, sql);
+        return DBUtil.selectRowBooleanValue(Container.conn, sql);
     }
 
-    public int doWrite(Connection conn, String title, String body) {
+    public int doWrite(String title, String body) {
 
         SecSql sql = new SecSql();
         sql.append("INSERT INTO article");
@@ -47,12 +50,12 @@ public class ArticleService {
         sql.append("title = ?,", title);
         sql.append("`body` = ?;", body);
 
-        int id = DBUtil.insert(conn, sql);
+        int id = DBUtil.insert(Container.conn, sql);
 
         return id;
     }
 
-    public int doModify(Connection conn, int modifyId, String title, String body) {
+    public int doModify(int modifyId, String title, String body) {
 
         SecSql sql = new SecSql();
         sql.append("UPDATE article");
@@ -65,29 +68,29 @@ public class ArticleService {
         }
         sql.append("WHERE id = ?;", modifyId);
 
-        return DBUtil.update(conn, sql);
+        return DBUtil.update(Container.conn, sql);
     }
 
-    public int doDelete(Connection conn, int deleteId) {
+    public int doDelete(int deleteId) {
 
         SecSql sql = new SecSql();
         sql.append("DELETE");
         sql.append("FROM article");
         sql.append("WHERE id = ?;", deleteId);
 
-        DBUtil.delete(conn, sql);
+        DBUtil.delete(Container.conn, sql);
 
         return deleteId;
     }
 
-    public void showList(Connection conn) {
+    public void showList() {
 
         SecSql sql = new SecSql();
         sql.append("SELECT *");
         sql.append("FROM article");
         sql.append("ORDER BY id DESC;");
 
-        List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
+        List<Map<String, Object>> articleListMap = DBUtil.selectRows(Container.conn, sql);
 
         for (Map<String, Object> articleMap : articleListMap) {
             articles.add(new Article(articleMap));
@@ -109,14 +112,14 @@ public class ArticleService {
         }
     }
 
-    public void showDetail(Connection conn, int detailId) {
+    public void showDetail(int detailId) {
 
         SecSql sql = new SecSql();
         sql.append("SELECT *");
         sql.append("FROM article");
         sql.append("WHERE id = ?;", detailId);
 
-        Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+        Map<String, Object> articleMap = DBUtil.selectRow(Container.conn, sql);
 
         Article article = new Article(articleMap);
         System.out.println("No. : " + article.getId());

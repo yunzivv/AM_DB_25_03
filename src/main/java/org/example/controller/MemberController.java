@@ -1,8 +1,9 @@
 package org.example.controller;
 
+import org.example.container.Container;
+import org.example.dto.Member;
 import org.example.service.MemberService;
 
-import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.util.Scanner;
 
@@ -13,14 +14,18 @@ public class MemberController {
     private MemberService memberService;
     private Member loginedMember = null;
 
-    public MemberController(Scanner sc, Connection conn) {
-        this.sc = sc;
-        this.conn = conn;
+    public MemberController() {
+        this.sc = Container.sc;
+        this.conn = Container.conn;
         this.memberService = new MemberService();
     }
 
     boolean isLogined() {
         return loginedMember != null;
+    }
+
+    public Member getLoginedMember() {
+        return loginedMember;
     }
 
     public void join() {
@@ -41,7 +46,7 @@ public class MemberController {
             }
 
             // memberService에서 loginId 존재 여부 확인
-            boolean isLoginId = memberService.loginIdIsExist(conn, loginId);
+            boolean isLoginId = memberService.loginIdIsExist(loginId);
 
             if (isLoginId) {
                 System.out.printf("%s는 이미 사용중인 ID입니다.\n", loginId);
@@ -78,7 +83,7 @@ public class MemberController {
             break;
         }
 
-        int id = memberService.doJoin(conn, loginId, loginPw, name);
+        int id = memberService.doJoin(loginId, loginPw, name);
         System.out.printf("%s님 회원가입을 축하합니다.", name);
     }
 
@@ -90,7 +95,8 @@ public class MemberController {
             System.out.print("password : ");
             String loginPw = sc.nextLine().trim();
 
-            String name= memberService.login(conn, loginId, loginPw);
+            loginedMember = memberService.login(loginId, loginPw);
+            String name = loginedMember.getName();
 
             if (name == null || name.isEmpty()) {
                 System.out.printf("로그인 실패(%d/3)\n", count);
@@ -98,12 +104,11 @@ public class MemberController {
                 continue;
             }
             System.out.print(name + "님 로그인 성공");
-
             return;
         }
     }
 
     public void logout() {
-        int i = memberService.logout(conn);
+        int i = memberService.logout();
     }
 }

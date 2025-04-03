@@ -1,8 +1,8 @@
 package org.example.controller;
 
+import org.example.container.Container;
 import org.example.service.ArticleService;
 
-import java.sql.Connection;
 import java.util.Scanner;
 
 public class ArticleController {
@@ -10,12 +10,12 @@ public class ArticleController {
     Scanner sc;
     ArticleService articleService;
 
-    public ArticleController(Scanner sc, Connection conn) {
-        this.sc = sc;
-        articleService = new ArticleService();
+    public ArticleController() {
+        this.sc = Container.sc;
+        articleService = Container.articleService;
     }
 
-    public void doWrite(Connection conn) {
+    public void doWrite() {
 
         System.out.println("[write]");
 
@@ -25,11 +25,11 @@ public class ArticleController {
         System.out.print("body : ");
         String body = sc.nextLine();
 
-        int id =articleService.doWrite(conn, title, body);
+        int id =articleService.doWrite(title, body);
         System.out.printf("article %d is wrote\n", id);
     }
 
-    public void modify(Connection conn, String cmd) {
+    public void modify(String cmd) {
         int modifyId;
 
         try {
@@ -39,7 +39,7 @@ public class ArticleController {
             return;
         }
 
-        if (!articleService.idIsExist(conn, modifyId)) {
+        if (!articleService.idIsExist(modifyId)) {
             System.out.printf("article %d is not exist\n", modifyId);
             return;
         }
@@ -50,11 +50,11 @@ public class ArticleController {
         System.out.print("new Body : ");
         String body = sc.nextLine().trim();
 
-        int id = articleService.doModify(conn, modifyId, title, body);
+        int id = articleService.doModify(modifyId, title, body);
         System.out.printf("article %d is modified", id);
     }
 
-    public void doDelete(Connection conn, String cmd) {
+    public void doDelete(String cmd) {
 
         int deleteId;
 
@@ -66,19 +66,19 @@ public class ArticleController {
             sc.nextLine();
         }
 
-        if (!articleService.idIsExist(conn, deleteId)) {
+        if (!articleService.idIsExist(deleteId)) {
             System.out.printf("article %d is not exist\n", deleteId);
             return;
         }
 
-        int id = articleService.doDelete(conn, deleteId);
+        int id = articleService.doDelete(deleteId);
         System.out.printf("article %d is deleted\n", id);
     }
 
-    public void showList(Connection conn) {
+    public void showList() {
 
         // article 존재 여부 확인
-        if (!articleService.articleIsExist(conn)) {
+        if (!articleService.articleIsExist()) {
             System.out.println("article is not exist");
             return;
         }
@@ -86,10 +86,10 @@ public class ArticleController {
         System.out.println(" No |  title  |  regDate  ");
         System.out.println("--------------------------");
 
-        articleService.showList(conn);
+        articleService.showList();
     }
 
-    public void showDetail(Connection conn, String cmd) {
+    public void showDetail(String cmd) {
 
         int detailId;
 
@@ -101,11 +101,11 @@ public class ArticleController {
             sc.nextLine();
         }
 
-        if (!articleService.idIsExist(conn, detailId)) {
+        if (!articleService.idIsExist(detailId)) {
             System.out.printf("article %d is not exist\n", detailId);
             return;
         }
 
-        articleService.showDetail(conn, detailId);
+        articleService.showDetail(detailId);
     }
 }

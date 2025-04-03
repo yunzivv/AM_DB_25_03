@@ -1,12 +1,12 @@
 package org.example.service;
 
 import org.example.dao.MemberDao;
-
-import java.sql.Connection;
+import org.example.dto.Member;
 
 public class MemberService {
 
     MemberDao memberDao;
+    Member loginedMember = null;
 
     public MemberService() {
 
@@ -14,27 +14,28 @@ public class MemberService {
     }
 
     // 입력받은 loginId 존재 여부 확인
-    public boolean loginIdIsExist(Connection conn, String loginId) {
+    public boolean loginIdIsExist(String loginId) {
 
-        return memberDao.loginIdIsExist(conn, loginId);
+        return memberDao.loginIdIsExist(loginId);
     }
 
     // 회원가입
-    public int doJoin(Connection conn, String loginId, String loginPw, String name) {
+    public int doJoin(String loginId, String loginPw, String name) {
 
-        return memberDao.doJoin(conn, loginId, loginPw, name);
+        return memberDao.doJoin(loginId, loginPw, name);
     }
 
-    public String login(Connection conn, String loginId, String loginPw) {
+    // 로그인
+    public Member login(String loginId, String loginPw) {
 
-        return memberDao.login(conn, loginId, loginPw);
+        return memberDao.login(loginId, loginPw);
     }
 
-    public int logout(Connection conn) {
+    // 로그아웃
+    public int logout() {
 
-        return memberDao.logout(conn);
+        return memberDao.logout();
     }
 
-    public void join() {
-    }
+
 }

@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.container.Container;
 import org.example.controller.ArticleController;
 import org.example.controller.MemberController;
 
@@ -9,6 +10,13 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class App {
+
+    private Scanner sc;
+
+    public App() {
+        Container.init();
+        this.sc = Container.sc;
+    }
 
     // 반복문 내부에서 드라이버 연결
     // 연결 성공 시 doAction 메서드 호출
@@ -35,7 +43,10 @@ public class App {
 
             try {
                 conn = DriverManager.getConnection(url, "root", "");
-                int actionResult = doAction(conn, sc, cmd);
+
+                Container.conn = conn;
+
+                int actionResult = doAction(cmd);
 
                 if (actionResult == -1) {
                     System.out.println("[프로그램 종료]");
@@ -60,14 +71,14 @@ public class App {
     }
 
     // 동작 메서드
-    private int doAction(Connection conn, Scanner sc, String cmd) {
+    private int doAction(String cmd) {
 
         if (cmd.equals("exit")) {
             return -1;
         }
 
-        MemberController memberController = new MemberController(sc, conn);
-        ArticleController articleController = new ArticleController(sc, conn);
+        MemberController memberController = Container.memberController;
+        ArticleController articleController = Container.articleController;
 
         if (cmd.equals("member join")) {
 
@@ -83,23 +94,23 @@ public class App {
 
         } else if (cmd.equals("article write")) {
 
-            articleController.doWrite(conn);
+            articleController.doWrite();
 
         } else if (cmd.equals("article list")) {
 
-            articleController.showList(conn);
+            articleController.showList();
 
         } else if (cmd.startsWith("article modify")) {
 
-            articleController.modify(conn, cmd);
+            articleController.modify(cmd);
 
         } else if (cmd.startsWith("article delete")) {
 
-            articleController.doDelete(conn, cmd);
+            articleController.doDelete(cmd);
 
         } else if (cmd.startsWith("article detail")) {
 
-            articleController.showDetail(conn, cmd);
+            articleController.showDetail(cmd);
 
         } else {
 
