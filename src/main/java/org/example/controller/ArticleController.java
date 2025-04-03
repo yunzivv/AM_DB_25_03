@@ -118,6 +118,8 @@ public class ArticleController {
         if(cmd.contains("?")) {
             String keyword = cmd.split(" ")[2];
             keyword = keyword.substring(0, keyword.indexOf("?"));
+
+            System.out.print("Search Keyword : ");
             System.out.println(keyword);
             articles = articleService.getArticles(keyword);
         } else {

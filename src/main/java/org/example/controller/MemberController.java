@@ -108,15 +108,15 @@ public class MemberController {
             String loginPw = sc.nextLine().trim();
 
             loginedMember = memberService.login(loginId, loginPw);
-            String name = loginedMember.getName();
 
-            if (name == null || name.isEmpty()) {
+            if (loginedMember == null) {
                 System.out.printf("로그인 실패(%d/3)\n", count);
                 ++count;
                 continue;
             }
 
-            Container.session.loginedMember = loginedMember;
+            String name = loginedMember.getName();
+            Container.session.login(loginedMember);
             Container.session.loginedMemberId = loginedMember.getId();
             System.out.print(name + "님 로그인 성공\n");
 

@@ -1,5 +1,6 @@
 package org.example.session;
 
+import org.example.container.Container;
 import org.example.dto.Member;
 
 // 로그인 상태를 기억함
@@ -14,9 +15,8 @@ public class Session {
         loginedMemberId = -1;
     }
 
-    public Member login() {
-
-        return null;
+    public void login(Member member) {
+        Container.session.loginedMember = member;
     }
 
     public void logout() {

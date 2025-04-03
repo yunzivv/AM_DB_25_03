@@ -15,8 +15,8 @@ public class Member {
         this.id = (int) articleMap.get("id");
         this.regDate = (String) articleMap.get("regDate");
         this.updateDate = (String) articleMap.get("updateDate");
-        this.loginId = (String) articleMap.get("title");
-        this.lginPw = (String) articleMap.get("body");
+        this.loginId = (String) articleMap.get("loginId");
+        this.lginPw = (String) articleMap.get("lginPw");
         this.name = (String) articleMap.get("name");
     }
 

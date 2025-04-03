@@ -41,7 +41,7 @@ public class MemberDao {
         return DBUtil.insert(Container.conn, sql);
     }
 
-    public Member login(String loginId, String loginPw) {
+    public Member getMember(String loginId, String loginPw) {
 
         SecSql sql = new SecSql();
         sql.append("SELECT *");
@@ -50,9 +50,12 @@ public class MemberDao {
         sql.append("AND loginPw = ?;", loginPw);
 
         Map<String, Object> memberMap = DBUtil.selectRow(Container.conn, sql);
-        Member member = new Member(memberMap);
 
-        return member;
+        if(memberMap.isEmpty()) {
+            return null;
+        }
+
+        return new Member(memberMap);
     }
 
     public int logout() {

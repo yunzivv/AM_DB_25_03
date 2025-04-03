@@ -28,7 +28,7 @@ public class MemberService {
     // 로그인
     public Member login(String loginId, String loginPw) {
 
-        return memberDao.login(loginId, loginPw);
+        return memberDao.getMember(loginId, loginPw);
     }
 
     // 로그아웃
