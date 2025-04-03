@@ -44,7 +44,9 @@ public class JDBCSelectTest {
                 String title = rs.getString("title");
                 String body = rs.getString("body");
 
-                Article article = new Article(id, regDate, content, title, body);
+                // article 클래스 수정으로 memeberID값, id 임시 설정해둠
+                Article article = new Article(id, regDate, "dd", 1, title, body);
+//                Article article = new Article(id, regDate, content, title, body); // 원본
 
                 articles.add(article);
             }

@@ -96,9 +96,9 @@ public class App {
 
             articleController.doWrite();
 
-        } else if (cmd.equals("article list")) {
+        } else if (cmd.startsWith("article list")) {
 
-            articleController.showList();
+            articleController.showList(cmd);
 
         } else if (cmd.startsWith("article modify")) {
 

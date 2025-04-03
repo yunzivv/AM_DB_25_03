@@ -7,27 +7,27 @@ public class Article {
     private int id;
     private String regDate;
     private String updateDate;
+    private int memberId;
     private String title;
     private String body;
+
+    private String writer;
 
     public Article(Map<String, Object> articleMap) {
         this.id = (int) articleMap.get("id");
         this.regDate = (String) articleMap.get("regDate");
         this.updateDate = (String) articleMap.get("updateDate");
+        this.memberId = (int) articleMap.get("memberId");
         this.title = (String) articleMap.get("title");
         this.body = (String) articleMap.get("body");
+        this.writer = (String) articleMap.get("name");
     }
 
-    public Article(int id, String title, String regDate) {
-        this.id = id;
-        this.title = title;
-        this.regDate = regDate;
-    }
-
-    public Article(int id, String regDate, String updateDate, String title, String body) {
+    public Article(int id, String regDate, String updateDate, int memberId, String title, String body) {
         this.id = id;
         this.regDate = regDate;
         this.updateDate = updateDate;
+        this.memberId = memberId;
         this.title = title;
         this.body = body;
     }
@@ -35,16 +35,23 @@ public class Article {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
-
     public String getRegDate() {return regDate;}
+
     public void setRegDate(String regDate) {this.regDate = regDate;}
-
     public String getUpdateDate() {return updateDate;}
-    public void setUpdateDate(String updateDate) {this.updateDate = updateDate;}
 
+    public void setUpdateDate(String updateDate) {this.updateDate = updateDate;}
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
     public String getTitle() {
         return title;
     }
@@ -57,5 +64,13 @@ public class Article {
     }
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getWriter() {
+        return writer;
+    }
+
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
 }

@@ -4,6 +4,7 @@ USE AM_DB_25_03;
 
 DROP TABLE article;
 
+# loginId 속성 추가해야한다.
 CREATE TABLE article(
     id INT(100) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME NOT NULL,

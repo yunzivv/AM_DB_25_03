@@ -4,16 +4,13 @@ import org.example.container.Container;
 import org.example.dao.ArticleDao;
 import org.example.dto.Article;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleService {
 
-    List<Article> articles;
     ArticleDao articleDao;
 
     public ArticleService() {
-        articles = new ArrayList<Article>();
         articleDao = Container.articleDao;
     }
 
@@ -28,9 +25,9 @@ public class ArticleService {
         return articleDao.idIsExist(id);
     }
 
-    public int doWrite(String title, String body) {
+    public int doWrite(String title, String body, int memberId) {
 
-        return articleDao.doWrite(title, body);
+        return articleDao.doWrite(title, body, memberId);
     }
 
     public int doModify(int modifyId, String title, String body) {
@@ -48,9 +45,11 @@ public class ArticleService {
         return articleDao.getArticles();
     }
 
-    public Article getArticle(int detailId) {
+    public List<Article> getArticles(String keyword) {
+        return articleDao.getArticles(keyword);
+    }
 
-        return articleDao.getArticle(detailId);
-
+    public Article getArticleById(int id) {
+        return articleDao.getArticleById(id);
     }
 }
