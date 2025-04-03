@@ -51,6 +51,8 @@ public class MemberDao {
 
         Map<String, Object> memberMap = DBUtil.selectRow(Container.conn, sql);
 
+        // 조건문 없이 그냥 memberMap을 반환하게 되면
+        // NullPointException 발생
         if(memberMap.isEmpty()) {
             return null;
         }
