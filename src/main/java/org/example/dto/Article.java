@@ -7,7 +7,7 @@ public class Article {
     private int id;
     private String regDate;
     private String updateDate;
-    private int memberId;
+    private int loginId;
     private String title;
     private String body;
 
@@ -17,7 +17,7 @@ public class Article {
         this.id = (int) articleMap.get("id");
         this.regDate = (String) articleMap.get("regDate");
         this.updateDate = (String) articleMap.get("updateDate");
-        this.memberId = (int) articleMap.get("memberId");
+        this.loginId = (int) articleMap.get("loginId");
         this.title = (String) articleMap.get("title");
         this.body = (String) articleMap.get("body");
         this.writer = (String) articleMap.get("name");
@@ -27,7 +27,7 @@ public class Article {
         this.id = id;
         this.regDate = regDate;
         this.updateDate = updateDate;
-        this.memberId = memberId;
+        this.loginId = loginId;
         this.title = title;
         this.body = body;
     }
@@ -46,11 +46,11 @@ public class Article {
 
     public void setUpdateDate(String updateDate) {this.updateDate = updateDate;}
     public int getMemberId() {
-        return memberId;
+        return loginId;
     }
 
     public void setMemberId(int memberId) {
-        this.memberId = memberId;
+        this.loginId = memberId;
     }
     public String getTitle() {
         return title;

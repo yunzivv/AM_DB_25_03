@@ -43,7 +43,7 @@ public class ArticleDao {
         sql.append("INSERT INTO article");
         sql.append("SET regDate = NOW(),");
         sql.append("updateDate = NOW(),");
-        sql.append("memberId = ?,", memberId);
+        sql.append("loginId = ?,", memberId);
         sql.append("title = ?,", title);
         sql.append("`body` = ?;", body);
 
@@ -85,7 +85,7 @@ public class ArticleDao {
         sql.append("SELECT a.*, m.name");
         sql.append("FROM article AS a");
         sql.append("INNER JOIN `member` AS m");
-        sql.append("ON a.memberId = m.id");
+        sql.append("ON a.loginId = m.id");
         sql.append("ORDER BY a.id DESC;");
 
         List<Map<String, Object>> articleListMap = DBUtil.selectRows(Container.conn, sql);
@@ -103,7 +103,7 @@ public class ArticleDao {
         sql.append("SELECT a.*, m.name");
         sql.append("FROM article AS a");
         sql.append("INNER JOIN `member` AS m");
-        sql.append("ON a.memberId = m.id");
+        sql.append("ON a.loginId = m.id");
         sql.append("WHERE a.title LIKE CONCAT('%', ? '%')", keyword);
         sql.append("ORDER BY a.id DESC;");
 
@@ -123,7 +123,7 @@ public class ArticleDao {
         sql.append("SELECT a.*, m.name");
         sql.append("FROM article AS a");
         sql.append("INNER JOIN `member` AS m");
-        sql.append("ON a.memberId = m.id");
+        sql.append("ON a.loginId = m.id");
         sql.append("WHERE a.id = ?;", id);
 
         Map<String, Object> articleMap = DBUtil.selectRow(Container.conn, sql);
